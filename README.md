@@ -24,3 +24,28 @@ For help, see: https://nodejs.org/en/docs/inspector
 7. Change the dropdown to `Heavy (Bottom Up)` if needed, and click the `Total Time` to sort the results.
 
 ![result](https://user-images.githubusercontent.com/1812118/145723337-a3675885-1ada-45c6-ae94-493cd4874b08.png)
+
+## Temporary fix
+
+Edit `node_modules/postcss-preset-env/dist/index.js:L174` and change this function
+
+```js
+function getUnsupportedBrowsersByFeature(feature) {
+  // ...
+}
+```
+
+to this:
+
+```js
+function _getUnsupportedBrowsersByFeature(feature) {
+  // ...
+}
+const getUnsupportedBrowsersByFeature = require("lodash/memoize")(
+  _getUnsupportedBrowsersByFeature
+);
+```
+
+> Make sure you installed `lodash` first.
+
+The the Webpack build time will reduce to about 10 seconds.
